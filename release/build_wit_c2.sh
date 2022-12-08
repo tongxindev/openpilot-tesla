@@ -1,5 +1,7 @@
 #!/usr/bin/bash -e
 
+set -x
+
 # git diff --name-status origin/release3-staging | grep "^A" | less
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
@@ -31,14 +33,25 @@ git checkout wit
 git pull
 git status
 
-
 cd $BUILD_DIR
 
 git clean -xdf
 git reset --hard 
 git checkout $RELEASE_BRANCH 
 git pull
+git submodule update --init
 git status
+
+
+# scons gets four cores
+echo 0-3 > /dev/cpuset/background/cpus
+echo 0-3 > /dev/cpuset/system-background/cpus
+echo 0-3 > /dev/cpuset/foreground/cpus
+echo 0-3 > /dev/cpuset/foreground/boost/cpus
+echo 0-3 > /dev/cpuset/android/cpus
+
+# openpilot gets 1 core
+echo 0-1 > /dev/cpuset/app/cpus
 
 # do the files copy
 echo "[-] copying files T=$SECONDS"
@@ -81,7 +94,7 @@ popd
 
 # Build
 export PYTHONPATH="$BUILD_DIR"
-scons -j$(nproc)
+scons -j4 
 
 # Ensure no submodules in release
 if test "$(git submodule--helper list | wc -l)" -gt "0"; then
