@@ -7,7 +7,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
 cd $DIR
 
 BUILD_DIR=/data/openpilot
-SOURCE_DIR=/data/openpilot_tesla
+SOURCE_DIR=/data/openpilot-tesla
 
 if [ -f /EON ]; then
   FILES_SRC="release/files_eon"
