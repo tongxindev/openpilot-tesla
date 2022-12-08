@@ -27,7 +27,7 @@ cd  $SOURCE_DIR
 
 git clean -xdf
 git reset --hard 
-git checkout tesla_unity_beta 
+git checkout wit
 git pull
 git status
 
